@@ -23,3 +23,13 @@ func RandomString(n int) string {
 
 	return sb.String()
 }
+
+// RandomEmail gen generates a random
+func RandomEmail() string {
+	return RandomString(6) + "@" + RandomString(6) + ".com"
+}
+
+// RandomFloat32 generates a random float32 between min and max
+func RandomFloat32(min, max float32) float32 {
+	return min + rand.Float32()*(max-min)
+}

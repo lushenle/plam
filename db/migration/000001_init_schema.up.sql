@@ -2,17 +2,19 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE "users" (
   "username" varchar PRIMARY KEY,
+  "role" varchar NOT NULL DEFAULT 'user',
   "hashed_password" varchar NOT NULL,
   "full_name" varchar NOT NULL,
   "email" varchar UNIQUE NOT NULL,
   "password_changed_at" timestamptz NOT NULL DEFAULT '0001-01-01',
-  "created_at" timestamptz NOT NULL DEFAULT (now())
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "updated_at" timestamptz NOT NULL DEFAULT '0001-01-01'
 );
 
 CREATE TABLE "project" (
-   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+   "id" char DEFAULT uuid_generate_v4() NOT NULL,
    "name" varchar NOT NULL,
-   "balance" float4 NOT NULL,
+   "amount" float4 NOT NULL,
    "description" text NOT NULL,
    "created_at" timestamptz NOT NULL DEFAULT NOW(),
    "updated_at" timestamptz NOT NULL DEFAULT '0001-01-01',
@@ -20,10 +22,10 @@ CREATE TABLE "project" (
 );
 
 CREATE TABLE "income" (
-   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+   "id" char DEFAULT uuid_generate_v4() NOT NULL,
    "payee" varchar NOT NULL,
-   "balance" float4 NOT NULL,
-   "project_id" uuid,
+   "amount" float4 NOT NULL,
+   "project_id" uuid NOT NULL,
    "created_at" timestamptz NOT NULL DEFAULT NOW(),
    "updated_at" timestamptz NOT NULL DEFAULT '0001-01-01',
    PRIMARY KEY ("id"),
@@ -31,22 +33,22 @@ CREATE TABLE "income" (
 );
 
 CREATE TABLE "loan" (
-   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+   "id" char DEFAULT uuid_generate_v4() NOT NULL,
    "borrower" varchar NOT NULL,
-   "balance" float4 NOT NULL,
+   "amount" float4 NOT NULL,
    "subject" text NOT NULL,
    "created_at" timestamptz NOT NULL DEFAULT NOW(),
-   "update_at" timestamptz NOT NULL DEFAULT '0001-01-01',
+   "updated_at" timestamptz NOT NULL DEFAULT '0001-01-01',
    PRIMARY KEY ("id")
 );
 
 CREATE TABLE "pay_out" (
-   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+   "id" char DEFAULT uuid_generate_v4() NOT NULL,
    "owner" varchar NOT NULL,
-   "balance" float4 NOT NULL,
+   "amount" float4 NOT NULL,
    "subject" text NOT NULL,
    "created_at" timestamptz NOT NULL DEFAULT NOW(),
-   "update_at" timestamptz NOT NULL DEFAULT '0001-01-01',
+   "updated_at" timestamptz NOT NULL DEFAULT '0001-01-01',
    PRIMARY KEY ("id")
 );
 

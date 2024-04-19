@@ -9,6 +9,7 @@ import (
 // Config stores all configuration of the applications
 type Config struct {
 	Loglevel string   `json:"loglevel" yaml:"loglevel"`
+	Logfile  string   `json:"logfile" yaml:"logfile"`
 	Database Database `json:"database" yaml:"database"`
 	Server   Server   `json:"server" yaml:"server"`
 }

@@ -7,7 +7,8 @@ import (
 	"github.com/gin-contrib/gzip"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
-	db "github.com/lushenle/plam/pkg/db"
+	_ "github.com/lushenle/plam/docs"
+	"github.com/lushenle/plam/pkg/db"
 	"github.com/lushenle/plam/pkg/token"
 	"github.com/lushenle/plam/pkg/util"
 	"github.com/penglongli/gin-metrics/ginmetrics"
@@ -16,7 +17,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// Server serves HTTP requests for our PanGu Operating System
+// Server serves HTTP requests for Paramount Construction Machinery System
 type Server struct {
 	router     *gin.Engine
 	config     util.Config
@@ -90,7 +91,7 @@ func (server *Server) setupRouter() {
 
 	// Configure the Swagger UI with basic authentication
 	swaggerConfig := &ginSwagger.Config{
-		URL: "http://localhost/swagger/doc.json", // Update this URL based on project structure
+		URL: "http://localhost:8080/swagger/doc.json", // Update this URL based on project structure
 	}
 	router.GET("/swagger/*any", ginSwagger.CustomWrapHandler(swaggerConfig, swaggerFiles.Handler))
 
@@ -98,11 +99,55 @@ func (server *Server) setupRouter() {
 
 	{
 		apiV1.GET("/healthz", server.healthz)
-		apiV1.POST("/users/sign", server.signupUser)
+		apiV1.POST("/users/signup", server.signupUser)
 		apiV1.POST("/users/login", server.loginUser)
 	}
 
 	authRoutes := apiV1.Group("/").Use(authMiddleware(server.tokenMaker))
+
+	// projects router
+	{
+		authRoutes.POST("/projects/all", server.listProjects)
+		authRoutes.GET("/projects/:id", server.getProject)
+		authRoutes.POST("/projects/search", server.searchProjects)
+	}
+
+	// incomes router
+	{
+		authRoutes.POST("/incomes/all", server.listIncomes)
+		authRoutes.GET("/incomes/:id", server.getIncome)
+		authRoutes.POST("/incomes/search", server.searchIncomes)
+	}
+
+	// loans router
+	{
+		authRoutes.POST("/loans/all", server.listLoans)
+		authRoutes.GET("/loans/:id", server.getLoan)
+		authRoutes.POST("/loans/search", server.searchLoans)
+	}
+
+	// pay_outs router
+	{
+		authRoutes.POST("/pay_outs/all", server.listPayOuts)
+		authRoutes.GET("/pay_outs/:id", server.getPayOut)
+		authRoutes.POST("/pay_outs/search", server.searchPayOuts)
+	}
+
+	authRoutes.Use(rbacMiddleware())
+
+	{
+		authRoutes.POST("/projects", server.createProject)
+		authRoutes.DELETE("/projects/:id", server.deleteProject)
+
+		authRoutes.POST("/incomes", server.createIncome)
+		authRoutes.DELETE("/incomes/:id", server.deleteIncome)
+
+		authRoutes.POST("/loans", server.createLoan)
+		authRoutes.DELETE("/loans/:id", server.deleteLoan)
+
+		authRoutes.POST("/pay_outs", server.createPayOut)
+		authRoutes.DELETE("/pay_outs/:id", server.deletePayOut)
+	}
 
 	server.router = router
 }
@@ -126,6 +171,13 @@ func (server *Server) healthz(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "ok")
 }
 
-func errorResponse(err error) gin.H {
+// errorResponse is a struct that represents an error response.
+//
+// @swagger:model
+type errorResponse struct {
+	Error string `json:"error"`
+}
+
+func errResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }

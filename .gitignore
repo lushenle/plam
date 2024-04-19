@@ -8,3 +8,5 @@ dbml-error.log
 conf/
 bootstrap/
 db/data
+logs/
+coverage*

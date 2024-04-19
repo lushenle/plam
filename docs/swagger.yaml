@@ -1,0 +1,1294 @@
+basePath: /v1
+definitions:
+  api.createIncomeRequest:
+    properties:
+      balance:
+        description: |-
+          Amount of the income.
+          Required: true
+          example: 1000
+          in: body
+        type: number
+      payee:
+        description: |-
+          Payee of the income.
+          Required: true
+          example: john_doe
+          in: body
+        type: string
+      project_id:
+        description: |-
+          ProjectID of the income.
+          Required: true
+          swagger:strfmt uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+          in: body
+        type: string
+    required:
+    - balance
+    - payee
+    - project_id
+    type: object
+  api.createLoanRequest:
+    properties:
+      amount:
+        description: |-
+          Amount of the loan.
+          Required: true
+          example: 1000
+          in: body
+        type: number
+      borrower:
+        description: |-
+          Borrower of the loan.
+          Required: true
+          example: john_doe
+          in: body
+        type: string
+      subject:
+        description: |-
+          Subject of the loan.
+          Required: true
+          example: loan1
+          in: body
+        type: string
+    required:
+    - amount
+    - borrower
+    - subject
+    type: object
+  api.createPayOutRequest:
+    properties:
+      amount:
+        description: |-
+          Amount of the pay out.
+          Required: true
+          example: 1000
+          in: body
+        type: number
+      owner:
+        description: |-
+          Owner of the pay out.
+          Required: true
+          example: john_doe
+          in: body
+        type: string
+      subject:
+        description: |-
+          Subject of the pay out.
+          Required: true
+          example: pay_out1
+          in: body
+        type: string
+    required:
+    - amount
+    - owner
+    - subject
+    type: object
+  api.createProjectRequest:
+    properties:
+      amount:
+        description: |-
+          Amount of the project.
+          Required: true
+          example: 1000
+          in: body
+        type: number
+      description:
+        description: |-
+          Description of the project.
+          Required: true
+          example: project1 description
+          in: body
+        type: string
+      name:
+        description: |-
+          Name of the project.
+          Required: true
+          example: project1
+          in: body
+        type: string
+    required:
+    - amount
+    - description
+    - name
+    type: object
+  api.createUserRequest:
+    properties:
+      email:
+        description: |-
+          Email of the user.
+          Required: true
+          example: john_doe@example.com
+          in: body
+          format: email
+        type: string
+      full_name:
+        description: |-
+          Full name of the user.
+          Required: true
+          example: John Doe
+          in: body
+          minLength: 1
+          maxLength: 255
+        type: string
+      password:
+        description: |-
+          Password of the user.
+          Required: true
+          example: password123
+          in: body
+          minLength: 6
+          maxLength: 32
+        maxLength: 32
+        minLength: 6
+        type: string
+      username:
+        description: |-
+          Username of the user.
+          Required: true
+          example: john_doe
+          in: body
+          minLength: 1
+          maxLength: 255
+        type: string
+    required:
+    - email
+    - full_name
+    - password
+    - username
+    type: object
+  api.errorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  api.listRequest:
+    properties:
+      page_id:
+        description: |-
+          PageID is the page number.
+          Required: true
+          example: 1
+          in: body
+          minimum: 1
+        minimum: 1
+        type: integer
+      page_size:
+        description: |-
+          PageSize is the number of projects per page.
+          Required: true
+          example: 5
+          in: body
+          minimum: 5
+          maximum: 10
+        maximum: 100
+        minimum: 5
+        type: integer
+    required:
+    - page_id
+    - page_size
+    type: object
+  api.loginUserRequest:
+    properties:
+      password:
+        description: |-
+          Password of the user.
+          Required: true
+          example: password123
+          in: body
+          minLength: 6
+          maxLength: 32
+        maxLength: 32
+        minLength: 6
+        type: string
+      username:
+        description: |-
+          Username of the user.
+          Required: true
+          example: john_doe
+          in: body
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  api.loginUserResponse:
+    properties:
+      access_token:
+        description: |-
+          Access token.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        type: string
+      access_token_expires_at:
+        description: |-
+          Access token expiration time.
+          swagger:strfmt date-time
+        type: string
+      access_token_id:
+        description: |-
+          Access token ID.
+          swagger:strfmt uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        type: string
+      user:
+        allOf:
+        - $ref: '#/definitions/api.userResponse'
+        description: User information.
+    type: object
+  api.searchRequest:
+    properties:
+      page_id:
+        description: |-
+          PageID is the page number.
+          Required: true
+          example: 1
+          in: body
+          minimum: 1
+        minimum: 1
+        type: integer
+      page_size:
+        description: |-
+          PageSize is the number of projects per page.
+          Required: true
+          example: 5
+          in: body
+          minimum: 5
+          maximum: 10
+        maximum: 10
+        minimum: 5
+        type: integer
+      query:
+        description: |-
+          Query is the search query.
+          Required: true
+          example: project1
+          in: body
+        type: string
+    required:
+    - page_id
+    - page_size
+    - query
+    type: object
+  api.userResponse:
+    properties:
+      created_at:
+        description: |-
+          CreatedAt represents the timestamp when the user was created.
+          swagger:strfmt date-time
+        type: string
+      email:
+        description: |-
+          Email of the user.
+          example: john_doe@example.com
+        type: string
+      full_name:
+        description: |-
+          Full name of the user.
+          example: John Doe
+        type: string
+      password_changed_at:
+        description: |-
+          PasswordChangedAt represents the timestamp when the password was last changed.
+          swagger:strfmt date-time
+        type: string
+      updated_at:
+        description: |-
+          UpdatedAt represents the timestamp when the user was last updated.
+          swagger:strfmt date-time
+        type: string
+      username:
+        description: |-
+          Username of the user.
+          example: john_doe
+        type: string
+    type: object
+  db.Income:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: string
+      payee:
+        type: string
+      project_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  db.Loan:
+    properties:
+      amount:
+        type: number
+      borrower:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      subject:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  db.PayOut:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: string
+      owner:
+        type: string
+      subject:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  db.Project:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: lushenle@gmail.com
+    name: API Support
+    url: http://localhost:8080/api/v1/support
+  description: This is a sample server for PLAM API.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://localhost:8080/api/v1/terms/
+  title: PLAM API
+  version: "1.0"
+paths:
+  /incomes:
+    post:
+      consumes:
+      - application/json
+      description: Create a new income.
+      parameters:
+      - description: Create Income Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.createIncomeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Income created
+          schema:
+            $ref: '#/definitions/db.Income'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create an income
+      tags:
+      - incomes
+  /incomes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an income by ID.
+      parameters:
+      - description: Income ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deleted income
+          schema:
+            $ref: '#/definitions/db.Income'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete an income
+      tags:
+      - incomes
+    get:
+      consumes:
+      - application/json
+      description: Get an income by ID.
+      parameters:
+      - description: Income ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Income found
+          schema:
+            $ref: '#/definitions/db.Income'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get an income
+      tags:
+      - incomes
+  /incomes/all:
+    post:
+      consumes:
+      - application/json
+      description: List all incomes.
+      parameters:
+      - description: List Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.listRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/db.Income'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List all incomes
+      tags:
+      - incomes
+  /incomes/search:
+    post:
+      consumes:
+      - application/json
+      description: Search incomes by payee.
+      parameters:
+      - description: Search Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.searchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Incomes found
+          schema:
+            items:
+              $ref: '#/definitions/db.Income'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Search incomes
+      tags:
+      - incomes
+  /loans:
+    post:
+      consumes:
+      - application/json
+      description: Create a new loan.
+      parameters:
+      - description: Create Loan Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.createLoanRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Loan created
+          schema:
+            $ref: '#/definitions/db.Loan'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a loan
+      tags:
+      - loans
+  /loans/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a loan by ID.
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Lone deleted
+          schema:
+            $ref: '#/definitions/db.Loan'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a loan
+      tags:
+      - loans
+    get:
+      consumes:
+      - application/json
+      description: Get a loan by ID.
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Loan found
+          schema:
+            $ref: '#/definitions/db.Loan'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a loan
+      tags:
+      - loans
+  /loans/all:
+    post:
+      consumes:
+      - application/json
+      description: List all loans.
+      parameters:
+      - description: List Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.listRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of loans
+          schema:
+            items:
+              $ref: '#/definitions/db.Loan'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List all loans
+      tags:
+      - loans
+  /loans/search:
+    post:
+      consumes:
+      - application/json
+      description: Search loans by borrower.
+      parameters:
+      - description: Search Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.searchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of loans
+          schema:
+            items:
+              $ref: '#/definitions/db.Loan'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Search loans
+      tags:
+      - loans
+  /pay_outs:
+    post:
+      consumes:
+      - application/json
+      description: Create a new pay out.
+      parameters:
+      - description: Create Pay Out Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.createPayOutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pay Out created
+          schema:
+            $ref: '#/definitions/db.PayOut'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a pay out
+      tags:
+      - pay_outs
+  /pay_outs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a pay out by ID.
+      parameters:
+      - description: Pay Out ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pay Out deleted
+          schema:
+            $ref: '#/definitions/db.PayOut'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a pay out
+      tags:
+      - pay_outs
+    get:
+      consumes:
+      - application/json
+      description: Get a pay out by ID.
+      parameters:
+      - description: Pay Out ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pay Out found
+          schema:
+            $ref: '#/definitions/db.PayOut'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a pay out
+      tags:
+      - pay_outs
+  /pay_outs/all:
+    post:
+      consumes:
+      - application/json
+      description: List all pay outs.
+      parameters:
+      - description: List Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.listRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of pay outs
+          schema:
+            items:
+              $ref: '#/definitions/db.PayOut'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List all pay outs
+      tags:
+      - pay_outs
+  /pay_outs/search:
+    post:
+      consumes:
+      - application/json
+      description: Search pay outs by owner.
+      parameters:
+      - description: Search Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.searchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Pay Outs found
+          schema:
+            items:
+              $ref: '#/definitions/db.PayOut'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Search pay outs
+      tags:
+      - pay_outs
+  /projects:
+    post:
+      consumes:
+      - application/json
+      description: Create a new project.
+      parameters:
+      - description: Create Project Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.createProjectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project created
+          schema:
+            $ref: '#/definitions/db.Project'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a project
+      tags:
+      - projects
+  /projects/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project deleted
+          schema:
+            $ref: '#/definitions/db.Project'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a project
+      tags:
+      - projects
+    get:
+      consumes:
+      - application/json
+      description: Get a project.
+      parameters:
+      - description: Project ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project found
+          schema:
+            $ref: '#/definitions/db.Project'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get a project
+      tags:
+      - projects
+  /projects/all:
+    post:
+      consumes:
+      - application/json
+      description: List all projects.
+      parameters:
+      - description: List Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.listRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of projects
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/db.Project'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: List projects
+      tags:
+      - projects
+  /projects/search:
+    post:
+      consumes:
+      - application/json
+      description: Search projects.
+      parameters:
+      - description: Search Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.listRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of projects
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/db.Project'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "403":
+          description: Forbidden
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Search projects
+      tags:
+      - projects
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user.
+      parameters:
+      - description: User login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.loginUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User login response
+          schema:
+            $ref: '#/definitions/api.loginUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      summary: Logs in a user.
+      tags:
+      - users
+  /users/signup:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user.
+      parameters:
+      - description: User creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.createUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User creation response
+          schema:
+            $ref: '#/definitions/api.userResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.errorResponse'
+      summary: Creates a new user.
+      tags:
+      - users
+produces:
+- application/json
+schemes:
+- http
+- https
+securityDefinitions:
+  apiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
