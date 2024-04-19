@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+config.yaml
+bin/
+sync.sh
+.vscode
+dbml-error.log
+conf/
+bootstrap/
+db/data
