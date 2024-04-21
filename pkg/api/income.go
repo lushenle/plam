@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/lushenle/plam/pkg/db"
 )
 
@@ -24,7 +23,7 @@ type createIncomeRequest struct {
 	// Required: true
 	// example: 1000
 	// in: body
-	Amount float32 `json:"balance" binding:"required"`
+	Amount float32 `json:"amount" binding:"required"`
 
 	// ProjectID of the income.
 	// Required: true
@@ -72,7 +71,7 @@ func (server *Server) createIncome(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, income)
+	ctx.JSON(http.StatusOK, income)
 }
 
 // listIncomes lists all incomes.
@@ -134,7 +133,7 @@ func (server *Server) getIncome(ctx *gin.Context) {
 		return
 	}
 
-	income, err := server.store.GetIncome(ctx, req.ID)
+	income, err := server.store.GetIncome(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))
@@ -171,10 +170,7 @@ func (server *Server) searchIncomes(ctx *gin.Context) {
 	}
 
 	arg := db.SearchIncomesParams{
-		Column1: pgtype.Text{
-			String: req.Query,
-			Valid:  true,
-		},
+		Payee:  req.Query,
 		Offset: (req.PageID - 1) * req.PageSize,
 		Limit:  req.PageSize,
 	}
@@ -210,7 +206,7 @@ func (server *Server) deleteIncome(ctx *gin.Context) {
 		return
 	}
 
-	income, err := server.store.DeleteIncome(ctx, req.ID)
+	income, err := server.store.DeleteIncome(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))

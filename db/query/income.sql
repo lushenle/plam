@@ -8,7 +8,7 @@ SELECT * FROM income ORDER BY id OFFSET $1 LIMIT $2;
 SELECT * FROM income WHERE id = $1;
 
 -- name: SearchIncomes :many
-SELECT * FROM income WHERE payee ILIKE '%' || $1 || '%' ORDER BY id OFFSET $2 LIMIT $3;
+SELECT * FROM income WHERE payee ILIKE $1 ORDER BY id OFFSET $2 LIMIT $3;
 
 -- name: DeleteIncome :one
 DELETE FROM income WHERE id = $1 RETURNING *;

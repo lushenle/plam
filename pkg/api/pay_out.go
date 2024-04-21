@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 	"github.com/lushenle/plam/pkg/db"
 )
 
@@ -133,7 +133,7 @@ func (server *Server) getPayOut(ctx *gin.Context) {
 		return
 	}
 
-	payOut, err := server.store.GetPayOut(ctx, req.ID)
+	payOut, err := server.store.GetPayOut(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))
@@ -171,10 +171,7 @@ func (server *Server) searchPayOuts(ctx *gin.Context) {
 	}
 
 	arg := db.SearchPayOutsParams{
-		Column1: pgtype.Text{
-			String: req.Query,
-			Valid:  true,
-		},
+		Owner:  req.Query,
 		Offset: (req.PageID - 1) * req.PageSize,
 		Limit:  req.PageSize,
 	}
@@ -215,7 +212,7 @@ func (server *Server) deletePayOut(ctx *gin.Context) {
 		return
 	}
 
-	payOut, err := server.store.DeletePayOut(ctx, req.ID)
+	payOut, err := server.store.DeletePayOut(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))

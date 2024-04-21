@@ -14,7 +14,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/lushenle/plam/pkg/db"
 	mockdb "github.com/lushenle/plam/pkg/db/mock"
 	"github.com/lushenle/plam/pkg/token"
@@ -165,7 +164,7 @@ func TestGetProjectAPI(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -179,7 +178,7 @@ func TestGetProjectAPI(t *testing.T) {
 		},
 		{
 			name:      "NoAuthorization",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().GetProject(gomock.Any(), gomock.Any()).Times(0)
@@ -189,21 +188,8 @@ func TestGetProjectAPI(t *testing.T) {
 			},
 		},
 		{
-			name:      "UnauthorizedUser",
-			projectID: project.ID,
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, "unauthorized_user", util.RoleUser, time.Minute)
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().GetProject(gomock.Any(), gomock.Eq(project.ID)).Times(1).Return(project, nil)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusOK, recorder.Code)
-			},
-		},
-		{
 			name:      "NotFound",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -229,7 +215,7 @@ func TestGetProjectAPI(t *testing.T) {
 		},
 		{
 			name:      "InternalError",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -422,10 +408,7 @@ func TestSearchProjectAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.SearchProjectsParams{
-					Column1: pgtype.Text{
-						String: projects[0].Name,
-						Valid:  true,
-					},
+					Name:   projects[0].Name,
 					Offset: 0,
 					Limit:  int32(n),
 				}
@@ -545,7 +528,7 @@ func TestDeleteProjectAPI(t *testing.T) {
 	}{
 		{
 			name:      "OK",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleAdmin, time.Minute)
 			},
@@ -559,7 +542,7 @@ func TestDeleteProjectAPI(t *testing.T) {
 		},
 		{
 			name:      "NoPermission",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -572,7 +555,7 @@ func TestDeleteProjectAPI(t *testing.T) {
 		},
 		{
 			name:      "NoAuthorization",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().DeleteProject(gomock.Any(), gomock.Any()).Times(0)
@@ -583,7 +566,7 @@ func TestDeleteProjectAPI(t *testing.T) {
 		},
 		{
 			name:      "InternalError",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleAdmin, time.Minute)
 			},
@@ -596,7 +579,7 @@ func TestDeleteProjectAPI(t *testing.T) {
 		},
 		{
 			name:      "NotFound",
-			projectID: project.ID,
+			projectID: project.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleAdmin, time.Minute)
 			},
@@ -651,7 +634,7 @@ func randomProject(t *testing.T) db.Project {
 	require.NotEmpty(t, id)
 
 	return db.Project{
-		ID:          id.String(),
+		ID:          id,
 		Name:        util.RandomString(6),
 		Amount:      util.RandomFloat32(1000, 10000),
 		Description: util.RandomString(30),

@@ -11,7 +11,7 @@ import (
 )
 
 type Income struct {
-	ID        string    `json:"id"`
+	ID        uuid.UUID `json:"id"`
 	Payee     string    `json:"payee"`
 	Amount    float32   `json:"amount"`
 	ProjectID uuid.UUID `json:"project_id"`
@@ -20,7 +20,7 @@ type Income struct {
 }
 
 type Loan struct {
-	ID        string    `json:"id"`
+	ID        uuid.UUID `json:"id"`
 	Borrower  string    `json:"borrower"`
 	Amount    float32   `json:"amount"`
 	Subject   string    `json:"subject"`
@@ -29,7 +29,7 @@ type Loan struct {
 }
 
 type PayOut struct {
-	ID        string    `json:"id"`
+	ID        uuid.UUID `json:"id"`
 	Owner     string    `json:"owner"`
 	Amount    float32   `json:"amount"`
 	Subject   string    `json:"subject"`
@@ -38,7 +38,7 @@ type PayOut struct {
 }
 
 type Project struct {
-	ID          string    `json:"id"`
+	ID          uuid.UUID `json:"id"`
 	Name        string    `json:"name"`
 	Amount      float32   `json:"amount"`
 	Description string    `json:"description"`

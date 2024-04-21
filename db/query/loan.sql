@@ -8,7 +8,7 @@ SELECT * FROM loan ORDER BY id OFFSET $1 LIMIT $2;
 SELECT * FROM loan WHERE id = $1;
 
 -- name: SearchLoans :many
-SELECT * FROM loan WHERE borrower ILIKE '%' || $1 || '%' ORDER BY id OFFSET $2 LIMIT $3;
+SELECT * FROM loan WHERE borrower ILIKE $1 ORDER BY id OFFSET $2 LIMIT $3;
 
 -- name: DeleteLoan :one
 DELETE FROM loan WHERE id = $1 RETURNING *;

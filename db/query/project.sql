@@ -8,7 +8,7 @@ SELECT * FROM project ORDER BY id OFFSET $1 LIMIT $2;
 SELECT * FROM project WHERE id = $1;
 
 -- name: SearchProjects :many
-SELECT * FROM project WHERE name ILIKE '%' || $1 || '%' ORDER BY id OFFSET $2 LIMIT $3;
+SELECT * FROM project WHERE name ILIKE $1 ORDER BY id OFFSET $2 LIMIT $3;
 
 -- name: DeleteProject :one
 DELETE FROM project WHERE id = $1 RETURNING *;

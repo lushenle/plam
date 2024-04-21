@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/lushenle/plam/pkg/util"
 	"github.com/stretchr/testify/require"
 )
@@ -79,10 +78,7 @@ func TestSearchPayOut(t *testing.T) {
 	require.NotZero(t, payOut1.CreatedAt)
 
 	arg2 := SearchPayOutsParams{
-		Column1: pgtype.Text{
-			String: arg.Owner,
-			Valid:  true,
-		},
+		Owner:  arg.Owner,
 		Offset: 0,
 		Limit:  5,
 	}

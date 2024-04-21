@@ -2,7 +2,7 @@ basePath: /v1
 definitions:
   api.createIncomeRequest:
     properties:
-      balance:
+      amount:
         description: |-
           Amount of the income.
           Required: true
@@ -25,7 +25,7 @@ definitions:
           in: body
         type: string
     required:
-    - balance
+    - amount
     - payee
     - project_id
     type: object

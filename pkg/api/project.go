@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 	"github.com/lushenle/plam/pkg/db"
 )
 
@@ -163,7 +163,7 @@ func (server *Server) getProject(ctx *gin.Context) {
 		return
 	}
 
-	project, err := server.store.GetProject(ctx, req.ID)
+	project, err := server.store.GetProject(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))
@@ -225,10 +225,7 @@ func (server *Server) searchProjects(ctx *gin.Context) {
 	}
 
 	arg := db.SearchProjectsParams{
-		Column1: pgtype.Text{
-			String: req.Query,
-			Valid:  true,
-		},
+		Name:   req.Query,
 		Offset: (req.PageID - 1) * req.PageSize,
 		Limit:  req.PageSize,
 	}
@@ -265,7 +262,7 @@ func (server *Server) deleteProject(ctx *gin.Context) {
 		return
 	}
 
-	project, err := server.store.DeleteProject(ctx, req.ID)
+	project, err := server.store.DeleteProject(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))

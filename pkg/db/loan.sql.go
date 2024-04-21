@@ -8,7 +8,7 @@ package db
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const createLoan = `-- name: CreateLoan :one
@@ -39,7 +39,7 @@ const deleteLoan = `-- name: DeleteLoan :one
 DELETE FROM loan WHERE id = $1 RETURNING id, borrower, amount, subject, created_at, updated_at
 `
 
-func (q *Queries) DeleteLoan(ctx context.Context, id string) (Loan, error) {
+func (q *Queries) DeleteLoan(ctx context.Context, id uuid.UUID) (Loan, error) {
 	row := q.db.QueryRow(ctx, deleteLoan, id)
 	var i Loan
 	err := row.Scan(
@@ -57,7 +57,7 @@ const getLoan = `-- name: GetLoan :one
 SELECT id, borrower, amount, subject, created_at, updated_at FROM loan WHERE id = $1
 `
 
-func (q *Queries) GetLoan(ctx context.Context, id string) (Loan, error) {
+func (q *Queries) GetLoan(ctx context.Context, id uuid.UUID) (Loan, error) {
 	row := q.db.QueryRow(ctx, getLoan, id)
 	var i Loan
 	err := row.Scan(
@@ -108,17 +108,17 @@ func (q *Queries) ListLoans(ctx context.Context, arg ListLoansParams) ([]Loan, e
 }
 
 const searchLoans = `-- name: SearchLoans :many
-SELECT id, borrower, amount, subject, created_at, updated_at FROM loan WHERE borrower ILIKE '%' || $1 || '%' ORDER BY id OFFSET $2 LIMIT $3
+SELECT id, borrower, amount, subject, created_at, updated_at FROM loan WHERE borrower ILIKE $1 ORDER BY id OFFSET $2 LIMIT $3
 `
 
 type SearchLoansParams struct {
-	Column1 pgtype.Text `json:"column_1"`
-	Offset  int32       `json:"offset"`
-	Limit   int32       `json:"limit"`
+	Borrower string `json:"borrower"`
+	Offset   int32  `json:"offset"`
+	Limit    int32  `json:"limit"`
 }
 
 func (q *Queries) SearchLoans(ctx context.Context, arg SearchLoansParams) ([]Loan, error) {
-	rows, err := q.db.Query(ctx, searchLoans, arg.Column1, arg.Offset, arg.Limit)
+	rows, err := q.db.Query(ctx, searchLoans, arg.Borrower, arg.Offset, arg.Limit)
 	if err != nil {
 		return nil, err
 	}
