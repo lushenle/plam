@@ -1,0 +1,11 @@
+---
+loglevel: info
+logfile: logs/plam.log
+database:
+  driverName: postgresql
+  dataSourceName: postgresql://root:mypass@localhost:5432/plam?sslmode=disable
+  migrationURL: file://db/migration
+server:
+  serverAddress: :8080
+  tokenSymmetricKey: c929a1e796df64eddf5712b26b423a8d
+  accessTokenDuration: 24h
