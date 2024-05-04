@@ -8,7 +8,7 @@ package db
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const createPayOut = `-- name: CreatePayOut :one
@@ -39,7 +39,7 @@ const deletePayOut = `-- name: DeletePayOut :one
 DELETE FROM pay_out WHERE id = $1 RETURNING id, owner, amount, subject, created_at, updated_at
 `
 
-func (q *Queries) DeletePayOut(ctx context.Context, id string) (PayOut, error) {
+func (q *Queries) DeletePayOut(ctx context.Context, id uuid.UUID) (PayOut, error) {
 	row := q.db.QueryRow(ctx, deletePayOut, id)
 	var i PayOut
 	err := row.Scan(
@@ -57,7 +57,7 @@ const getPayOut = `-- name: GetPayOut :one
 SELECT id, owner, amount, subject, created_at, updated_at FROM pay_out WHERE id = $1
 `
 
-func (q *Queries) GetPayOut(ctx context.Context, id string) (PayOut, error) {
+func (q *Queries) GetPayOut(ctx context.Context, id uuid.UUID) (PayOut, error) {
 	row := q.db.QueryRow(ctx, getPayOut, id)
 	var i PayOut
 	err := row.Scan(
@@ -108,17 +108,17 @@ func (q *Queries) ListPayOuts(ctx context.Context, arg ListPayOutsParams) ([]Pay
 }
 
 const searchPayOuts = `-- name: SearchPayOuts :many
-SELECT id, owner, amount, subject, created_at, updated_at FROM pay_out WHERE owner ILIKE '%' || $1 || '%' ORDER BY id OFFSET $2 LIMIT $3
+SELECT id, owner, amount, subject, created_at, updated_at FROM pay_out WHERE owner ILIKE $1 ORDER BY id OFFSET $2 LIMIT $3
 `
 
 type SearchPayOutsParams struct {
-	Column1 pgtype.Text `json:"column_1"`
-	Offset  int32       `json:"offset"`
-	Limit   int32       `json:"limit"`
+	Owner  string `json:"owner"`
+	Offset int32  `json:"offset"`
+	Limit  int32  `json:"limit"`
 }
 
 func (q *Queries) SearchPayOuts(ctx context.Context, arg SearchPayOutsParams) ([]PayOut, error) {
-	rows, err := q.db.Query(ctx, searchPayOuts, arg.Column1, arg.Offset, arg.Limit)
+	rows, err := q.db.Query(ctx, searchPayOuts, arg.Owner, arg.Offset, arg.Limit)
 	if err != nil {
 		return nil, err
 	}

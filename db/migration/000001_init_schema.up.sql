@@ -12,7 +12,7 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "project" (
-   "id" char DEFAULT uuid_generate_v4() NOT NULL,
+   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
    "name" varchar NOT NULL,
    "amount" float4 NOT NULL,
    "description" text NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE "project" (
 );
 
 CREATE TABLE "income" (
-   "id" char DEFAULT uuid_generate_v4() NOT NULL,
+   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
    "payee" varchar NOT NULL,
    "amount" float4 NOT NULL,
    "project_id" uuid NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE "income" (
 );
 
 CREATE TABLE "loan" (
-   "id" char DEFAULT uuid_generate_v4() NOT NULL,
+   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
    "borrower" varchar NOT NULL,
    "amount" float4 NOT NULL,
    "subject" text NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE "loan" (
 );
 
 CREATE TABLE "pay_out" (
-   "id" char DEFAULT uuid_generate_v4() NOT NULL,
+   "id" uuid DEFAULT uuid_generate_v4() NOT NULL,
    "owner" varchar NOT NULL,
    "amount" float4 NOT NULL,
    "subject" text NOT NULL,

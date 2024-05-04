@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createIncome = `-- name: CreateIncome :one
@@ -40,7 +39,7 @@ const deleteIncome = `-- name: DeleteIncome :one
 DELETE FROM income WHERE id = $1 RETURNING id, payee, amount, project_id, created_at, updated_at
 `
 
-func (q *Queries) DeleteIncome(ctx context.Context, id string) (Income, error) {
+func (q *Queries) DeleteIncome(ctx context.Context, id uuid.UUID) (Income, error) {
 	row := q.db.QueryRow(ctx, deleteIncome, id)
 	var i Income
 	err := row.Scan(
@@ -58,7 +57,7 @@ const getIncome = `-- name: GetIncome :one
 SELECT id, payee, amount, project_id, created_at, updated_at FROM income WHERE id = $1
 `
 
-func (q *Queries) GetIncome(ctx context.Context, id string) (Income, error) {
+func (q *Queries) GetIncome(ctx context.Context, id uuid.UUID) (Income, error) {
 	row := q.db.QueryRow(ctx, getIncome, id)
 	var i Income
 	err := row.Scan(
@@ -109,17 +108,17 @@ func (q *Queries) ListIncomes(ctx context.Context, arg ListIncomesParams) ([]Inc
 }
 
 const searchIncomes = `-- name: SearchIncomes :many
-SELECT id, payee, amount, project_id, created_at, updated_at FROM income WHERE payee ILIKE '%' || $1 || '%' ORDER BY id OFFSET $2 LIMIT $3
+SELECT id, payee, amount, project_id, created_at, updated_at FROM income WHERE payee ILIKE $1 ORDER BY id OFFSET $2 LIMIT $3
 `
 
 type SearchIncomesParams struct {
-	Column1 pgtype.Text `json:"column_1"`
-	Offset  int32       `json:"offset"`
-	Limit   int32       `json:"limit"`
+	Payee  string `json:"payee"`
+	Offset int32  `json:"offset"`
+	Limit  int32  `json:"limit"`
 }
 
 func (q *Queries) SearchIncomes(ctx context.Context, arg SearchIncomesParams) ([]Income, error) {
-	rows, err := q.db.Query(ctx, searchIncomes, arg.Column1, arg.Offset, arg.Limit)
+	rows, err := q.db.Query(ctx, searchIncomes, arg.Payee, arg.Offset, arg.Limit)
 	if err != nil {
 		return nil, err
 	}

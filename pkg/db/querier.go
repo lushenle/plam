@@ -6,6 +6,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
@@ -14,14 +16,14 @@ type Querier interface {
 	CreatePayOut(ctx context.Context, arg CreatePayOutParams) (PayOut, error)
 	CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
-	DeleteIncome(ctx context.Context, id string) (Income, error)
-	DeleteLoan(ctx context.Context, id string) (Loan, error)
-	DeletePayOut(ctx context.Context, id string) (PayOut, error)
-	DeleteProject(ctx context.Context, id string) (Project, error)
-	GetIncome(ctx context.Context, id string) (Income, error)
-	GetLoan(ctx context.Context, id string) (Loan, error)
-	GetPayOut(ctx context.Context, id string) (PayOut, error)
-	GetProject(ctx context.Context, id string) (Project, error)
+	DeleteIncome(ctx context.Context, id uuid.UUID) (Income, error)
+	DeleteLoan(ctx context.Context, id uuid.UUID) (Loan, error)
+	DeletePayOut(ctx context.Context, id uuid.UUID) (PayOut, error)
+	DeleteProject(ctx context.Context, id uuid.UUID) (Project, error)
+	GetIncome(ctx context.Context, id uuid.UUID) (Income, error)
+	GetLoan(ctx context.Context, id uuid.UUID) (Loan, error)
+	GetPayOut(ctx context.Context, id uuid.UUID) (PayOut, error)
+	GetProject(ctx context.Context, id uuid.UUID) (Project, error)
 	GetUser(ctx context.Context, username string) (User, error)
 	ListIncomes(ctx context.Context, arg ListIncomesParams) ([]Income, error)
 	ListLoans(ctx context.Context, arg ListLoansParams) ([]Loan, error)

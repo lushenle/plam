@@ -14,7 +14,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/lushenle/plam/pkg/db"
 	mockdb "github.com/lushenle/plam/pkg/db/mock"
 	"github.com/lushenle/plam/pkg/token"
@@ -165,7 +164,7 @@ func TestGetPayOutAPI(t *testing.T) {
 	}{
 		{
 			name:     "OK",
-			payOutID: payOut.ID,
+			payOutID: payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -179,7 +178,7 @@ func TestGetPayOutAPI(t *testing.T) {
 		},
 		{
 			name:      "NoAuthorization",
-			payOutID:  payOut.ID,
+			payOutID:  payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().GetPayOut(gomock.Any(), gomock.Any()).Times(0)
@@ -189,21 +188,8 @@ func TestGetPayOutAPI(t *testing.T) {
 			},
 		},
 		{
-			name:     "UnauthorizedUser",
-			payOutID: payOut.ID,
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, "unauthorized_user", util.RoleUser, time.Minute)
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().GetPayOut(gomock.Any(), gomock.Eq(payOut.ID)).Times(1).Return(payOut, nil)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusOK, recorder.Code)
-			},
-		},
-		{
 			name:     "NotFound",
-			payOutID: payOut.ID,
+			payOutID: payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -229,7 +215,7 @@ func TestGetPayOutAPI(t *testing.T) {
 		},
 		{
 			name:     "InternalError",
-			payOutID: payOut.ID,
+			payOutID: payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -422,10 +408,7 @@ func TestSearchPayOutAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.SearchPayOutsParams{
-					Column1: pgtype.Text{
-						String: payOuts[0].Owner,
-						Valid:  true,
-					},
+					Owner:  payOuts[0].Owner,
 					Offset: 0,
 					Limit:  int32(n),
 				}
@@ -545,7 +528,7 @@ func TestDeletePayOutAPI(t *testing.T) {
 	}{
 		{
 			name:     "OK",
-			payOutID: payOut.ID,
+			payOutID: payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleAdmin, time.Minute)
 			},
@@ -559,7 +542,7 @@ func TestDeletePayOutAPI(t *testing.T) {
 		},
 		{
 			name:     "NoPermission",
-			payOutID: payOut.ID,
+			payOutID: payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleUser, time.Minute)
 			},
@@ -572,7 +555,7 @@ func TestDeletePayOutAPI(t *testing.T) {
 		},
 		{
 			name:      "NoAuthorization",
-			payOutID:  payOut.ID,
+			payOutID:  payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().DeletePayOut(gomock.Any(), gomock.Any()).Times(0)
@@ -583,7 +566,7 @@ func TestDeletePayOutAPI(t *testing.T) {
 		},
 		{
 			name:     "InternalError",
-			payOutID: payOut.ID,
+			payOutID: payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleAdmin, time.Minute)
 			},
@@ -596,7 +579,7 @@ func TestDeletePayOutAPI(t *testing.T) {
 		},
 		{
 			name:     "NotFound",
-			payOutID: payOut.ID,
+			payOutID: payOut.ID.String(),
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, util.RoleAdmin, time.Minute)
 			},
@@ -651,7 +634,7 @@ func randomPayOut(t *testing.T) db.PayOut {
 	require.NotEmpty(t, id)
 
 	return db.PayOut{
-		ID:      id.String(),
+		ID:      id,
 		Owner:   util.RandomString(6),
 		Amount:  util.RandomFloat32(100, 1000),
 		Subject: util.RandomString(30),

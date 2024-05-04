@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 	"github.com/lushenle/plam/pkg/db"
 )
 
@@ -131,7 +131,7 @@ func (server *Server) getLoan(ctx *gin.Context) {
 		return
 	}
 
-	loan, err := server.store.GetLoan(ctx, req.ID)
+	loan, err := server.store.GetLoan(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))
@@ -167,12 +167,9 @@ func (server *Server) searchLoans(ctx *gin.Context) {
 	}
 
 	arg := db.SearchLoansParams{
-		Column1: pgtype.Text{
-			String: req.Query,
-			Valid:  true,
-		},
-		Offset: (req.PageID - 1) * req.PageSize,
-		Limit:  req.PageSize,
+		Borrower: req.Query,
+		Offset:   (req.PageID - 1) * req.PageSize,
+		Limit:    req.PageSize,
 	}
 
 	loans, err := server.store.SearchLoans(ctx, arg)
@@ -207,7 +204,7 @@ func (server *Server) deleteLoan(ctx *gin.Context) {
 		return
 	}
 
-	loan, err := server.store.DeleteLoan(ctx, req.ID)
+	loan, err := server.store.DeleteLoan(ctx, uuid.MustParse(req.ID))
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errResponse(err))

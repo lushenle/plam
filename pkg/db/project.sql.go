@@ -8,7 +8,7 @@ package db
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const createProject = `-- name: CreateProject :one
@@ -39,7 +39,7 @@ const deleteProject = `-- name: DeleteProject :one
 DELETE FROM project WHERE id = $1 RETURNING id, name, amount, description, created_at, updated_at
 `
 
-func (q *Queries) DeleteProject(ctx context.Context, id string) (Project, error) {
+func (q *Queries) DeleteProject(ctx context.Context, id uuid.UUID) (Project, error) {
 	row := q.db.QueryRow(ctx, deleteProject, id)
 	var i Project
 	err := row.Scan(
@@ -57,7 +57,7 @@ const getProject = `-- name: GetProject :one
 SELECT id, name, amount, description, created_at, updated_at FROM project WHERE id = $1
 `
 
-func (q *Queries) GetProject(ctx context.Context, id string) (Project, error) {
+func (q *Queries) GetProject(ctx context.Context, id uuid.UUID) (Project, error) {
 	row := q.db.QueryRow(ctx, getProject, id)
 	var i Project
 	err := row.Scan(
@@ -108,17 +108,17 @@ func (q *Queries) ListProjects(ctx context.Context, arg ListProjectsParams) ([]P
 }
 
 const searchProjects = `-- name: SearchProjects :many
-SELECT id, name, amount, description, created_at, updated_at FROM project WHERE name ILIKE '%' || $1 || '%' ORDER BY id OFFSET $2 LIMIT $3
+SELECT id, name, amount, description, created_at, updated_at FROM project WHERE name ILIKE $1 ORDER BY id OFFSET $2 LIMIT $3
 `
 
 type SearchProjectsParams struct {
-	Column1 pgtype.Text `json:"column_1"`
-	Offset  int32       `json:"offset"`
-	Limit   int32       `json:"limit"`
+	Name   string `json:"name"`
+	Offset int32  `json:"offset"`
+	Limit  int32  `json:"limit"`
 }
 
 func (q *Queries) SearchProjects(ctx context.Context, arg SearchProjectsParams) ([]Project, error) {
-	rows, err := q.db.Query(ctx, searchProjects, arg.Column1, arg.Offset, arg.Limit)
+	rows, err := q.db.Query(ctx, searchProjects, arg.Name, arg.Offset, arg.Limit)
 	if err != nil {
 		return nil, err
 	}

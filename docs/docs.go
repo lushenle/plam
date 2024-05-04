@@ -1444,12 +1444,12 @@ const docTemplate = `{
         "api.createIncomeRequest": {
             "type": "object",
             "required": [
-                "balance",
+                "amount",
                 "payee",
                 "project_id"
             ],
             "properties": {
-                "balance": {
+                "amount": {
                     "description": "Amount of the income.\nRequired: true\nexample: 1000\nin: body",
                     "type": "number"
                 },

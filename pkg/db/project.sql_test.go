@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/lushenle/plam/pkg/util"
 	"github.com/stretchr/testify/require"
 )
@@ -85,10 +84,7 @@ func TestSearchProjects(t *testing.T) {
 	require.NotZero(t, project.CreatedAt)
 
 	searchArg := SearchProjectsParams{
-		Column1: pgtype.Text{
-			String: "test",
-			Valid:  true,
-		},
+		Name:   arg.Name,
 		Offset: 0,
 		Limit:  5,
 	}

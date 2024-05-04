@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	uuid "github.com/google/uuid"
 	db "github.com/lushenle/plam/pkg/db"
 )
 
@@ -111,7 +112,7 @@ func (mr *MockStoreMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Call
 }
 
 // DeleteIncome mocks base method.
-func (m *MockStore) DeleteIncome(arg0 context.Context, arg1 string) (db.Income, error) {
+func (m *MockStore) DeleteIncome(arg0 context.Context, arg1 uuid.UUID) (db.Income, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteIncome", arg0, arg1)
 	ret0, _ := ret[0].(db.Income)
@@ -126,7 +127,7 @@ func (mr *MockStoreMockRecorder) DeleteIncome(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // DeleteLoan mocks base method.
-func (m *MockStore) DeleteLoan(arg0 context.Context, arg1 string) (db.Loan, error) {
+func (m *MockStore) DeleteLoan(arg0 context.Context, arg1 uuid.UUID) (db.Loan, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteLoan", arg0, arg1)
 	ret0, _ := ret[0].(db.Loan)
@@ -141,7 +142,7 @@ func (mr *MockStoreMockRecorder) DeleteLoan(arg0, arg1 interface{}) *gomock.Call
 }
 
 // DeletePayOut mocks base method.
-func (m *MockStore) DeletePayOut(arg0 context.Context, arg1 string) (db.PayOut, error) {
+func (m *MockStore) DeletePayOut(arg0 context.Context, arg1 uuid.UUID) (db.PayOut, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePayOut", arg0, arg1)
 	ret0, _ := ret[0].(db.PayOut)
@@ -156,7 +157,7 @@ func (mr *MockStoreMockRecorder) DeletePayOut(arg0, arg1 interface{}) *gomock.Ca
 }
 
 // DeleteProject mocks base method.
-func (m *MockStore) DeleteProject(arg0 context.Context, arg1 string) (db.Project, error) {
+func (m *MockStore) DeleteProject(arg0 context.Context, arg1 uuid.UUID) (db.Project, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteProject", arg0, arg1)
 	ret0, _ := ret[0].(db.Project)
@@ -171,7 +172,7 @@ func (mr *MockStoreMockRecorder) DeleteProject(arg0, arg1 interface{}) *gomock.C
 }
 
 // GetIncome mocks base method.
-func (m *MockStore) GetIncome(arg0 context.Context, arg1 string) (db.Income, error) {
+func (m *MockStore) GetIncome(arg0 context.Context, arg1 uuid.UUID) (db.Income, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetIncome", arg0, arg1)
 	ret0, _ := ret[0].(db.Income)
@@ -186,7 +187,7 @@ func (mr *MockStoreMockRecorder) GetIncome(arg0, arg1 interface{}) *gomock.Call 
 }
 
 // GetLoan mocks base method.
-func (m *MockStore) GetLoan(arg0 context.Context, arg1 string) (db.Loan, error) {
+func (m *MockStore) GetLoan(arg0 context.Context, arg1 uuid.UUID) (db.Loan, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetLoan", arg0, arg1)
 	ret0, _ := ret[0].(db.Loan)
@@ -201,7 +202,7 @@ func (mr *MockStoreMockRecorder) GetLoan(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // GetPayOut mocks base method.
-func (m *MockStore) GetPayOut(arg0 context.Context, arg1 string) (db.PayOut, error) {
+func (m *MockStore) GetPayOut(arg0 context.Context, arg1 uuid.UUID) (db.PayOut, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPayOut", arg0, arg1)
 	ret0, _ := ret[0].(db.PayOut)
@@ -216,7 +217,7 @@ func (mr *MockStoreMockRecorder) GetPayOut(arg0, arg1 interface{}) *gomock.Call 
 }
 
 // GetProject mocks base method.
-func (m *MockStore) GetProject(arg0 context.Context, arg1 string) (db.Project, error) {
+func (m *MockStore) GetProject(arg0 context.Context, arg1 uuid.UUID) (db.Project, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetProject", arg0, arg1)
 	ret0, _ := ret[0].(db.Project)

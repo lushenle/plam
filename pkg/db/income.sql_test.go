@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
-
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/lushenle/plam/pkg/util"
 	"github.com/stretchr/testify/require"
 )
@@ -19,7 +16,7 @@ func createRandomIncome(t *testing.T) Income {
 	arg := CreateIncomeParams{
 		Payee:     util.RandomString(10),
 		Amount:    util.RandomFloat32(0, 100),
-		ProjectID: uuid.MustParse(project.ID),
+		ProjectID: project.ID,
 	}
 
 	income, err := testStore.CreateIncome(context.Background(), arg)
@@ -77,7 +74,7 @@ func TestSearchIncomes(t *testing.T) {
 	arg := CreateIncomeParams{
 		Payee:     fmt.Sprintf("%s%s", "search", util.RandomString(10)),
 		Amount:    util.RandomFloat32(0, 100),
-		ProjectID: uuid.MustParse(project.ID),
+		ProjectID: project.ID,
 	}
 
 	income, err := testStore.CreateIncome(context.Background(), arg)
@@ -90,10 +87,7 @@ func TestSearchIncomes(t *testing.T) {
 	require.NotZero(t, income.CreatedAt)
 
 	arg2 := SearchIncomesParams{
-		Column1: pgtype.Text{
-			String: arg.Payee,
-			Valid:  true,
-		},
+		Payee:  arg.Payee,
 		Offset: 0,
 		Limit:  5,
 	}

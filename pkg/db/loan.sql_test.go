@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/lushenle/plam/pkg/util"
 	"github.com/stretchr/testify/require"
 )
@@ -76,12 +75,9 @@ func TestSearchLoan(t *testing.T) {
 	require.NotZero(t, loan.CreatedAt)
 
 	arg2 := SearchLoansParams{
-		Column1: pgtype.Text{
-			String: arg.Borrower,
-			Valid:  true,
-		},
-		Offset: 0,
-		Limit:  5,
+		Borrower: arg.Borrower,
+		Offset:   0,
+		Limit:    5,
 	}
 	loans, err := testStore.SearchLoans(context.Background(), arg2)
 	require.NoError(t, err)
