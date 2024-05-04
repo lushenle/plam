@@ -1,6 +1,5 @@
 .idea
 .DS_Store
-config.yaml
 bin/
 sync.sh
 .vscode
